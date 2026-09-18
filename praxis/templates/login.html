@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Login — Praxis{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <span class="login-icon">🔐</span>
+            <h1>Welcome to Praxis</h1>
+            <p class="login-subtitle">Bounty Hunter Arena — 1337 Integration Week</p>
+        </div>
+
+        <!-- Error message (shown after failed login) -->
+        {% if error %}
+        <div class="alert alert-error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <!-- Intra 42 Login Button -->
+        <a href="/login/intra" class="btn btn-primary btn-full" style="background-color: #00babc; border-color: #00babc; color: white; display: block; text-align: center; margin-bottom: 2rem;">
+            Continue with Intra 42
+        </a>
+        
+        <div style="text-align: center; margin-bottom: 2rem; color: #8b949e; position: relative;">
+            <hr style="border: 0; border-top: 1px solid #30363d; position: absolute; width: 100%; top: 50%; z-index: 1;">
+            <span style="background-color: #161b22; padding: 0 10px; position: relative; z-index: 2;">OR TEST ACCOUNTS</span>
+        </div>
+
+        <!-- Login form (Fallback/Test accounts) -->
+        <form method="POST" action="/login" class="login-form">
+            <div class="form-group">
+                <label for="username">Team Username</label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="e.g. team01"
+                    required
+                    autofocus
+                >
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                >
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">
+                Log In →
+            </button>
+        </form>
+
+        <div class="login-hint">
+            <p>POC accounts: <code>team01</code> / <code>team02</code> — password: <code>password123</code></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

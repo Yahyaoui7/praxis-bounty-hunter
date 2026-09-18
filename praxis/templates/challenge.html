@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Challenge — Praxis{% endblock %}
+
+{% block nav_right %}
+<div class="nav-user">
+    <span class="nav-team-name">{{ team.name }}</span>
+    <a href="/dashboard" class="btn btn-outline btn-small">Dashboard</a>
+    <a href="/logout" class="btn btn-outline btn-small">Logout</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="challenge-container">
+
+    {% if all_completed %}
+    <!-- ===== ALL LEVELS COMPLETED ===== -->
+    <div class="card card-success">
+        <div class="completion-banner">
+            <span class="completion-icon">🏆</span>
+            <h2>Congratulations!</h2>
+            <p>You completed all levels of the Bounty Hunter Arena!</p>
+            <p class="final-score">Final Score: <strong>{{ team.score }}</strong></p>
+        </div>
+        <div class="action-section">
+            <a href="/dashboard" class="btn btn-primary">← Back to Dashboard</a>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- ===== CHALLENGE PAGE ===== -->
+    <div class="challenge-header">
+        <h1 class="page-title">Level {{ current_level.number }}: {{ current_level.name }}</h1>
+        <p class="level-description">{{ current_level.description }}</p>
+    </div>
+
+    <!-- Progress + Score bar -->
+    <div class="challenge-stats">
+        <div class="challenge-stat">
+            <span class="stat-label">Progress</span>
+            <span class="stat-value" id="progress-text">{{ bugs_solved }} / {{ required_bugs }}</span>
+        </div>
+        <div class="challenge-stat">
+            <span class="stat-label">Score</span>
+            <span class="stat-value stat-score" id="score-text">{{ team.score }}</span>
+        </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-bar progress-bar-wide">
+        <div class="progress-fill" id="progress-bar" style="width: {{ (bugs_solved / required_bugs * 100) | int }}%"></div>
+    </div>
+
+    <!-- Bug list -->
+    <div class="bug-list">
+        {% for bug in bugs %}
+        <div class="bug-card {% if bug.solved %}bug-solved{% endif %}" id="bug-{{ bug.id }}">
+            <div class="bug-status">
+                {% if bug.solved %}
+                <span class="status-icon status-solved">✅</span>
+                {% else %}
+                <span class="status-icon status-unsolved">🐛</span>
+                {% endif %}
+            </div>
+            <div class="bug-info">
+                <h3 class="bug-title">{{ bug.title }}</h3>
+                <p class="bug-description">{{ bug.description }}</p>
+            </div>
+            <div class="bug-action">
+                {% if bug.solved %}
+                <span class="badge badge-solved">Solved</span>
+                {% else %}
+                <button
+                    class="btn btn-primary btn-check"
+                    onclick="checkBug({{ bug.id }}, this)"
+                    id="check-btn-{{ bug.id }}"
+                >
+                    Submit Solution
+                </button>
+                {% endif %}
+            </div>
+            
+            <!-- Evaluation Results Container -->
+            <div class="evaluation-result" id="eval-result-{{ bug.id }}" style="display: none; margin-top: 15px; padding: 15px; border-radius: 6px; background-color: #1e1e2e; color: #cdd6f4; font-family: monospace; font-size: 0.9em;">
+                <h4 style="margin-top: 0; color: #89b4fa;">Evaluation Result</h4>
+                <div id="eval-status-{{ bug.id }}" style="margin-bottom: 8px;"></div>
+                <div id="eval-commit-{{ bug.id }}" style="margin-bottom: 8px; color: #a6adc8;"></div>
+                <div style="margin-bottom: 4px; color: #a6adc8;">Output:</div>
+                <pre id="eval-output-{{ bug.id }}" style="background-color: #11111b; padding: 10px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; margin: 0;"></pre>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Navigation -->
+    <div class="action-section">
+        <a href="/dashboard" class="btn btn-outline">← Back to Dashboard</a>
+    </div>
+
+    {% endif %}
+</div>
+
+<!-- Level-up modal (shown via JS when 5/5 bugs solved) -->
+<div class="modal-overlay" id="level-modal" style="display: none;">
+    <div class="modal-card">
+        <span class="modal-icon" id="modal-icon">🎉</span>
+        <h2 id="modal-title">Level Completed!</h2>
+        <p id="modal-message"></p>
+        <button class="btn btn-primary" onclick="closeModalAndReload()">Continue</button>
+    </div>
+</div>
+{% endblock %}

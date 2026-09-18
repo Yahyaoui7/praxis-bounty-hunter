@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Create Team{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="card login-card">
+        <h1>Create New Team</h1>
+        <p class="login-subtitle">Register a team and create their GitLab repository</p>
+
+        {% if error %}
+        <div class="alert alert-error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="alert alert-success">
+            {{ success }}
+        </div>
+        {% endif %}
+
+        <form method="POST" action="/admin/team/new" class="login-form">
+            <div class="form-group">
+                <label for="admin_password">Admin Password</label>
+                <input type="password" id="admin_password" name="admin_password" required placeholder="POC Admin Password">
+            </div>
+            
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.1);">
+
+            <div class="form-group">
+                <label for="team_name">Team Display Name</label>
+                <input type="text" id="team_name" name="team_name" required placeholder="e.g. The Hackers">
+            </div>
+
+            <div class="form-group">
+                <label for="username">Team Username</label>
+                <input type="text" id="username" name="username" required placeholder="e.g. thehackers">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Team Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+                Register Team & Create GitLab Repo
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

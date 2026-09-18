@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Register — Praxis{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <span class="login-icon">🚀</span>
+            <h1>Create Your Team</h1>
+            <p class="login-subtitle">Intra: <code>{{ intra_login }}</code></p>
+        </div>
+
+        <!-- Error message -->
+        {% if error %}
+        <div class="alert alert-error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <!-- Registration form -->
+        <form method="POST" action="/register/intra" class="login-form">
+            <div class="form-group">
+                <label for="team_name">Team Display Name</label>
+                <input
+                    type="text"
+                    id="team_name"
+                    name="team_name"
+                    placeholder="e.g. The Hackers"
+                    required
+                    autofocus
+                >
+                <p style="font-size: 0.8rem; color: #8b949e; margin-top: 0.5rem;">
+                    This will be your team's public name on the leaderboard and used for your GitLab repository.
+                </p>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-full">
+                Register & Start →
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

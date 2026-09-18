@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — Praxis{% endblock %}
+
+{% block nav_right %}
+<div class="nav-user">
+    <span class="nav-team-name">{{ team.name }}</span>
+    <a href="/logout" class="btn btn-outline btn-small">Logout</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h1 class="page-title">Team Dashboard</h1>
+
+    {% if all_completed %}
+    <!-- ===== ALL LEVELS COMPLETED ===== -->
+    <div class="card card-success">
+        <div class="completion-banner">
+            <span class="completion-icon">🏆</span>
+            <h2>Congratulations!</h2>
+            <p>You completed all levels of the Bounty Hunter Arena!</p>
+        </div>
+        <div class="stats-row">
+            <div class="stat">
+                <span class="stat-label">Team</span>
+                <span class="stat-value">{{ team.name }}</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Final Score</span>
+                <span class="stat-value stat-score">{{ team.score }}</span>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- ===== NORMAL DASHBOARD ===== -->
+    <div class="card">
+        <!-- Team info -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-icon">👥</span>
+                <span class="stat-label">Team</span>
+                <span class="stat-value">{{ team.name }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">📊</span>
+                <span class="stat-label">Current Level</span>
+                <span class="stat-value">{{ current_level.number }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">🐛</span>
+                <span class="stat-label">Bugs Solved</span>
+                <span class="stat-value">{{ bugs_solved }} / {{ required_bugs }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">⭐</span>
+                <span class="stat-label">Score</span>
+                <span class="stat-value stat-score">{{ team.score }}</span>
+            </div>
+        </div>
+
+        <!-- Level info -->
+        <div class="level-info">
+            <h2>Level {{ current_level.number }}: {{ current_level.name }}</h2>
+            <p class="level-description">{{ current_level.description }}</p>
+        </div>
+
+        <!-- GitLab Info -->
+        <div class="gitlab-section">
+            <h3>GitLab Repository</h3>
+            {% if team.gitlab_project_url %}
+                <a href="{{ team.gitlab_project_url }}" target="_blank" class="btn btn-outline">
+                    🦊 Open Repository
+                </a>
+            {% else %}
+                <p>Not configured</p>
+            {% endif %}
+        </div>
+
+        <!-- Progress bar -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <span>Progress</span>
+                <span>{{ bugs_solved }} / {{ required_bugs }} bugs</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ (bugs_solved / required_bugs * 100) | int }}%"></div>
+            </div>
+        </div>
+
+        <!-- Start Challenge button -->
+        <div class="action-section">
+            <a href="/challenge" class="btn btn-primary btn-large">
+                🚀 Start Challenge
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

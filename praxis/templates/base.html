@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Praxis — Bounty Hunter Arena{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- Google Fonts: Fira Code for hacker aesthetic, Inter for readability -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation bar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="nav-logo">⚡</span>
+            <span class="nav-title">PRAXIS</span>
+            <span class="nav-subtitle">Bounty Hunter Arena</span>
+        </div>
+        {% block nav_right %}{% endblock %}
+    </nav>
+
+    <!-- Main content area -->
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Praxis POC — Phase 1 &middot; 1337 Integration Week</p>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
