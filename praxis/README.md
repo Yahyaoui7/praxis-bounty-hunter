@@ -135,6 +135,40 @@ Then open: **http://localhost:8000**
 
 ---
 
+## How to Deploy to Kubernetes (Production)
+
+Praxis is fully configured to run on a Kubernetes cluster (like the 1337 infrastructure). It uses PostgreSQL for persistence, K8s Jobs for evaluations, and Ingress for stable routing.
+
+### 1. Configure Secrets and Environment
+Edit `k8s/secret.yaml` and `k8s/configmap.yaml` to set your passwords, GitLab tokens, and OAuth keys.
+Ensure `INTRA_REDIRECT_URI` in the ConfigMap matches your Ingress hostname (e.g., `https://praxis.1337.ma/auth/callback`).
+
+### 2. Apply Manifests
+```bash
+kubectl apply -f k8s/namespace.yaml
+kubectl apply -f k8s/configmap.yaml
+kubectl apply -f k8s/secret.yaml
+kubectl apply -f k8s/postgres.yaml
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
+kubectl apply -f k8s/ingress.yaml
+kubectl apply -f k8s/rbac.yaml
+kubectl apply -f k8s/networkpolicy.yaml
+```
+
+### 3. Build and Push the Evaluator Image
+If you haven't already, push the evaluator image to your cluster's registry:
+```bash
+cd docker/evaluator
+docker build -t praxis-evaluator:latest .
+# Tag and push to your registry
+# docker tag praxis-evaluator:latest your-registry/praxis-evaluator:latest
+# docker push your-registry/praxis-evaluator:latest
+```
+*(Make sure to update `EVALUATOR_IMAGE` in `k8s/configmap.yaml` if you push it somewhere else).*
+
+---
+
 ## How to Run Tests
 
 ```bash
@@ -274,9 +308,10 @@ The student's code runs in a Docker container with strict constraints:
 - Single concurrency (evaluations run synchronously via FastAPI request). In the future, this will be offloaded to an asynchronous task queue (e.g., Celery) and eventually Kubernetes.
 - Does not yet use AI for ambiguous test results.
 
-### Next Steps toward Kubernetes
-- Extract the Evaluation Service into an asynchronous worker pod.
-- Use Kubernetes `Job`s instead of a raw `docker run` command for horizontal scalability.
+### Evaluation Execution Flow
+
+- Local Dev (`EVAL_BACKEND=docker`): Uses local `docker run` synchronously.
+- Production (`EVAL_BACKEND=kubernetes`): Spawns a Kubernetes `Job` dynamically via the Python K8s Client.
 
 ### Future flow
 

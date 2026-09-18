@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-evaluator-egress
+  namespace: praxis
+spec:
+  podSelector:
+    matchLabels:
+      app: evaluator
+  policyTypes:
+  - Egress
+  # The evaluator pods are completely isolated.
+  # They cannot access the internet, the postgres DB, or the Intra 42 API.
+  egress: []

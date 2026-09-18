@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: praxis-config
+  namespace: praxis
+data:
+  GITLAB_URL: "https://gitlab.com"
+  EVAL_BACKEND: "kubernetes"
+  EVAL_NAMESPACE: "praxis"
+  EVALUATOR_IMAGE: "praxis-evaluator:latest"
+  # This must match your Ingress hostname!
+  INTRA_REDIRECT_URI: "https://praxis.1337.ma/auth/callback"

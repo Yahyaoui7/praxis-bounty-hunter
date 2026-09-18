@@ -73,12 +73,13 @@ def validate_intra_config() -> bool:
     # Log presence/value of redirect_uri (NOT a secret — it's the public callback URL)
     logger.info("Intra 42 OAuth configured. Redirect URI: %s", redirect_uri)
 
-    # Warn if someone accidentally set localhost — it will break LAN multi-PC usage
-    if "localhost" in redirect_uri or "127.0.0.1" in redirect_uri:
+    # Warn if using an IP address or localhost - in Kubernetes this will break when pods move
+    import re
+    if "localhost" in redirect_uri or "127.0.0.1" in redirect_uri or re.search(r'\d+\.\d+\.\d+\.\d+', redirect_uri):
         logger.warning(
-            "INTRA_REDIRECT_URI contains 'localhost' or '127.0.0.1'. "
-            "This will BREAK OAuth for any student PC other than the server machine. "
-            "Set it to the LAN IP, e.g.: http://10.12.1.10:8000/auth/callback"
+            "INTRA_REDIRECT_URI contains an IP address or localhost. "
+            "In Kubernetes, this will BREAK OAuth when the pod is rescheduled to a different node. "
+            "Set it to the public Ingress hostname, e.g.: https://praxis.1337.ma/auth/callback"
         )
 
     # Log that secrets are present but never log their values

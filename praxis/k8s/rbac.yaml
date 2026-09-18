@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: praxis-service-account
+  namespace: praxis
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: praxis-job-manager
+  namespace: praxis
+rules:
+- apiGroups: ["batch"]
+  resources: ["jobs"]
+  verbs: ["create", "get", "list", "watch", "delete"]
+- apiGroups: [""]
+  resources: ["pods", "pods/log"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["create", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: praxis-job-manager-binding
+  namespace: praxis
+subjects:
+- kind: ServiceAccount
+  name: praxis-service-account
+  namespace: praxis
+roleRef:
+  kind: Role
+  name: praxis-job-manager
+  apiGroup: rbac.authorization.k8s.io

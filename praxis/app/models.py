@@ -13,7 +13,7 @@ Architecture note:
     and password_hash will no longer be needed.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import (
     Column, Integer, String, Boolean, DateTime,
     ForeignKey, UniqueConstraint
@@ -149,7 +149,7 @@ class Evaluation(Base):
     stderr = Column(String, nullable=True)
     execution_time = Column(Integer, nullable=True) # or Float
     
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     # Relationships
     team = relationship("Team", backref="evaluations")

@@ -298,12 +298,11 @@ def register_intra(
         new_team.gitlab_project_path = repo_data["path_with_namespace"]
         db.commit()
     except GitLabServiceError as e:
-        db.rollback()
-        return templates.TemplateResponse("register_intra.html", {
-            "request": request,
-            "intra_login": intra_login,
-            "error": f"GitLab repository creation failed: {str(e)}. Team was NOT created."
-        })
+        # GitLab failed, but we STILL want to create the team account!
+        # The dashboard and evaluation service can handle a missing repository.
+        import logging
+        logging.getLogger(__name__).warning(f"Intra registration: Team created but GitLab repo failed: {e}")
+        db.commit() # Commit the team without repo data
     except Exception as e:
         db.rollback()
         return templates.TemplateResponse("register_intra.html", {
